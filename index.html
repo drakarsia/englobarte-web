@@ -9,11 +9,13 @@
 <body>
 
   <nav>
-    <div class="logo">Englobarte</div>
+    <div class="logo">
+      <img src="images/logo.jpg" alt="Englobarte">
+    </div>
     <ul>
       <li><a href="#inicio">Inicio</a></li>
       <li><a href="#servicios">Servicios</a></li>
-      <li><a href="#galeria">Galería</a></li>
+      <li><a href="galeria.html">Galería</a></li>
       <li><a href="#nosotros">Nosotros</a></li>
       <li><a href="#contacto">Contacto</a></li>
     </ul>
@@ -52,6 +54,9 @@
         <img src="images/gender-reveal.jpg" alt="Gender reveal">
         <img src="images/cumple-1-leo.jpg" alt="Primer cumpleaños de Leo">
       </div>
+      <div style="text-align:center; margin-top:30px;">
+        <a href="galeria.html" class="boton">Ver galería completa</a>
+      </div>
     </section>
 
     <section id="nosotros">
@@ -86,6 +91,104 @@
   <footer>
     <p>Englobarte · Reus, Tarragona · Trabajamos por toda España</p>
   </footer>
+
+  <div class="chat-widget">
+    <button id="chat-boton" class="chat-boton" aria-label="Abrir chat">💬</button>
+
+    <div id="chat-ventana" class="chat-ventana oculto">
+      <div class="chat-header">
+        <span>Englobarte</span>
+        <button id="chat-cerrar" class="chat-cerrar" aria-label="Cerrar chat">✕</button>
+      </div>
+      <div id="chat-mensajes" class="chat-mensajes"></div>
+      <div class="chat-input-area">
+        <input type="text" id="chat-input" placeholder="Escribe tu mensaje...">
+        <button id="chat-enviar" class="chat-enviar">Enviar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const chatBoton = document.getElementById('chat-boton');
+    const chatVentana = document.getElementById('chat-ventana');
+    const chatCerrar = document.getElementById('chat-cerrar');
+    const chatMensajes = document.getElementById('chat-mensajes');
+    const chatInput = document.getElementById('chat-input');
+    const chatEnviar = document.getElementById('chat-enviar');
+
+    let historial = [];
+    let chatAbierto = false;
+
+    chatBoton.addEventListener('click', () => {
+      chatAbierto = !chatAbierto;
+      chatVentana.classList.toggle('oculto', !chatAbierto);
+
+      if (chatAbierto && historial.length === 0) {
+        agregarMensaje('¡Hola! Soy el asistente virtual de Englobarte. Cuéntame qué evento estás organizando y te ayudo con lo que necesites.', 'bot');
+      }
+    });
+
+    chatCerrar.addEventListener('click', () => {
+      chatAbierto = false;
+      chatVentana.classList.add('oculto');
+    });
+
+    function agregarMensaje(texto, tipo) {
+      const div = document.createElement('div');
+      div.classList.add('chat-mensaje', tipo === 'user' ? 'chat-mensaje-usuario' : 'chat-mensaje-bot');
+      div.textContent = texto;
+      chatMensajes.appendChild(div);
+      chatMensajes.scrollTop = chatMensajes.scrollHeight;
+    }
+
+    async function enviarMensaje() {
+      const texto = chatInput.value.trim();
+      if (!texto) return;
+
+      agregarMensaje(texto, 'user');
+      historial.push({ role: 'user', content: texto });
+      chatInput.value = '';
+      chatInput.disabled = true;
+      chatEnviar.disabled = true;
+
+      const indicador = document.createElement('div');
+      indicador.classList.add('chat-mensaje', 'chat-mensaje-bot');
+      indicador.id = 'chat-cargando';
+      indicador.textContent = 'Escribiendo...';
+      chatMensajes.appendChild(indicador);
+      chatMensajes.scrollTop = chatMensajes.scrollHeight;
+
+      try {
+        const respuesta = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages: historial })
+        });
+
+        const datos = await respuesta.json();
+        document.getElementById('chat-cargando').remove();
+
+        if (datos.respuesta) {
+          agregarMensaje(datos.respuesta, 'bot');
+          historial.push({ role: 'assistant', content: datos.respuesta });
+        } else {
+          agregarMensaje('Perdona, ha habido un problema. Intenta de nuevo o escríbenos por WhatsApp.', 'bot');
+        }
+      } catch (error) {
+        document.getElementById('chat-cargando').remove();
+        agregarMensaje('Perdona, ha habido un problema de conexión. Intenta de nuevo.', 'bot');
+      }
+
+      chatInput.disabled = false;
+      chatEnviar.disabled = false;
+      chatInput.focus();
+    }
+
+    chatEnviar.addEventListener('click', enviarMensaje);
+    chatInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') enviarMensaje();
+    });
+  </script>
 
 </body>
 </html>
