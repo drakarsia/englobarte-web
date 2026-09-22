@@ -24,6 +24,7 @@ export default async function handler(req, res) {
 
 Sobre el negocio:
 - Servicios: decoración para cumpleaños, bautizos y comuniones, baby showers y gender reveals, bodas, jubilaciones, y eventos corporativos.
+- Además de la decoración, también ofrecen servicios extra para completar el evento: catering, montaje de mesa (mesas dulces, mesas de invitados, etc.) y floristería. Ellos mismos se encargan de conseguir todo y montarlo, para que el cliente no tenga que buscarlo por su cuenta.
 - Todo el trabajo es artesanal: montan cada decoración a mano en su propio taller, y por eso cada evento es totalmente personalizado. Es lo que más les diferencia de otras empresas del sector: cuidan cada detalle con mucho cariño.
 - Se desplazan a cualquier parte de España (no salen del país). Si el evento está a varias horas de Reus, se cobran aparte los gastos de desplazamiento (gasolina y dietas de comida), a cargo del cliente.
 - Montan y desmontan ellos mismos: van antes del evento a montar la decoración, y después del evento vuelven a desmontarla.
