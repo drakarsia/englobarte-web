@@ -217,6 +217,7 @@ section h2 {
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   transition: transform 0.3s;
+  cursor: zoom-in;
 }
 
 .grid-galeria img:hover {
@@ -398,6 +399,7 @@ footer {
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(51, 71, 74, 0.15);
   transition: transform 0.2s ease;
+  cursor: zoom-in;
 }
 
 .grid-galeria-completa img:hover {
@@ -566,5 +568,89 @@ footer {
   .chat-boton {
     right: 16px;
     bottom: 16px;
+  }
+}
+
+/* ===== Visor de imagen grande (lightbox) ===== */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(20, 30, 31, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+  padding: 20px;
+}
+
+.lightbox.oculto {
+  display: none;
+}
+
+.lightbox-img {
+  max-width: 85vw;
+  max-height: 85vh;
+  border-radius: 10px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+}
+
+.lightbox-cerrar {
+  position: absolute;
+  top: 24px;
+  right: 30px;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.lightbox-nav {
+  background: rgba(255,255,255,0.15);
+  border: none;
+  color: white;
+  font-size: 2rem;
+  width: 50px;
+  height: 50px;
+  min-width: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+  flex-shrink: 0;
+}
+
+.lightbox-nav:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.lightbox-prev {
+  margin-right: 20px;
+}
+
+.lightbox-next {
+  margin-left: 20px;
+}
+
+@media (max-width: 768px) {
+  .lightbox-nav {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    font-size: 1.6rem;
+  }
+
+  .lightbox-prev {
+    margin-right: 8px;
+  }
+
+  .lightbox-next {
+    margin-left: 8px;
+  }
+
+  .lightbox-cerrar {
+    top: 14px;
+    right: 16px;
   }
 }

@@ -117,6 +117,61 @@
     </p>
   </footer>
 
+  <div id="lightbox" class="lightbox oculto">
+    <span id="lightbox-cerrar" class="lightbox-cerrar" aria-label="Cerrar">✕</span>
+    <button id="lightbox-prev" class="lightbox-nav lightbox-prev" aria-label="Anterior">‹</button>
+    <img id="lightbox-img" class="lightbox-img" src="" alt="">
+    <button id="lightbox-next" class="lightbox-nav lightbox-next" aria-label="Siguiente">›</button>
+  </div>
+
+  <script>
+    const galeriaImgs = Array.from(document.querySelectorAll('.grid-galeria img, .grid-galeria-completa img'));
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxCerrar = document.getElementById('lightbox-cerrar');
+    const lightboxPrev = document.getElementById('lightbox-prev');
+    const lightboxNext = document.getElementById('lightbox-next');
+    let indiceActual = 0;
+
+    function fotosVisibles() {
+      return galeriaImgs.filter(img => img.offsetParent !== null);
+    }
+
+    function abrirLightbox(img) {
+      const visibles = fotosVisibles();
+      indiceActual = visibles.indexOf(img);
+      lightboxImg.src = img.src;
+      lightboxImg.alt = img.alt;
+      lightbox.classList.remove('oculto');
+    }
+
+    function mostrarIndice(i) {
+      const visibles = fotosVisibles();
+      if (visibles.length === 0) return;
+      indiceActual = (i + visibles.length) % visibles.length;
+      lightboxImg.src = visibles[indiceActual].src;
+      lightboxImg.alt = visibles[indiceActual].alt;
+    }
+
+    galeriaImgs.forEach(img => {
+      img.addEventListener('click', () => abrirLightbox(img));
+    });
+
+    lightboxCerrar.addEventListener('click', () => lightbox.classList.add('oculto'));
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) lightbox.classList.add('oculto');
+    });
+    lightboxPrev.addEventListener('click', () => mostrarIndice(indiceActual - 1));
+    lightboxNext.addEventListener('click', () => mostrarIndice(indiceActual + 1));
+
+    document.addEventListener('keydown', (e) => {
+      if (lightbox.classList.contains('oculto')) return;
+      if (e.key === 'Escape') lightbox.classList.add('oculto');
+      if (e.key === 'ArrowLeft') mostrarIndice(indiceActual - 1);
+      if (e.key === 'ArrowRight') mostrarIndice(indiceActual + 1);
+    });
+  </script>
+
   <div class="chat-widget">
     <button id="chat-boton" class="chat-boton" aria-label="Abrir chat">💬</button>
 
