@@ -654,3 +654,60 @@ footer {
     right: 16px;
   }
 }
+
+/* ===== Páginas legales (aviso legal, privacidad, cookies) ===== */
+.legal-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.legal-content h1 {
+  font-family: 'Playfair Display', serif;
+  color: var(--color-principal);
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.legal-content .fecha-actualizacion {
+  text-align: center;
+  font-style: italic;
+  color: var(--color-texto);
+  opacity: 0.7;
+  margin-bottom: 40px;
+}
+
+.legal-content h2 {
+  font-family: 'Playfair Display', serif;
+  color: var(--color-principal);
+  font-size: 1.3rem;
+  margin-top: 35px;
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+.legal-content p,
+.legal-content li {
+  margin-bottom: 14px;
+  font-size: 1rem;
+}
+
+.legal-content ul {
+  margin-left: 20px;
+  margin-bottom: 14px;
+}
+
+.legal-content a {
+  color: var(--color-principal);
+  font-weight: bold;
+}
+
+.footer-legal {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+.footer-legal a {
+  color: white;
+}
