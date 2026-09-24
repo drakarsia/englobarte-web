@@ -118,9 +118,89 @@
       <a href="mailto:englobarte.tgn@gmail.com">Email</a>
     </p>
     <p class="footer-legal">
-      <a href="aviso-legal.html">Aviso legal</a> · <a href="politica-privacidad.html">Política de privacidad</a>
+      <a href="aviso-legal.html">Aviso legal</a> · <a href="politica-privacidad.html">Política de privacidad</a> · <a href="politica-cookies.html">Política de cookies</a> · <button type="button" class="link-cookies" id="link-config-cookies">Configurar cookies</button>
     </p>
   </footer>
+
+  <div id="cookie-banner" class="cookie-banner oculto">
+    <p>
+      Usamos cookies propias y de análisis (Google Analytics) para entender cómo se usa esta web. Puedes aceptarlas
+      o rechazarlas. Más información en nuestra <a href="politica-cookies.html">Política de cookies</a>.
+    </p>
+    <div class="cookie-botones">
+      <button id="cookie-rechazar" class="cookie-btn cookie-btn-rechazar">Rechazar</button>
+      <button id="cookie-aceptar" class="cookie-btn cookie-btn-aceptar">Aceptar</button>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var GA_ID = 'G-NW7432ZJZN';
+      var banner = document.getElementById('cookie-banner');
+      var btnAceptar = document.getElementById('cookie-aceptar');
+      var btnRechazar = document.getElementById('cookie-rechazar');
+      var linkConfig = document.getElementById('link-config-cookies');
+
+      function cargarGoogleAnalytics() {
+        if (window.gaCargado) return;
+        window.gaCargado = true;
+
+        var script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+        document.head.appendChild(script);
+
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        window.gtag = gtag;
+        gtag('js', new Date());
+        gtag('config', GA_ID);
+      }
+
+      function mostrarBanner() {
+        if (banner) banner.classList.remove('oculto');
+      }
+
+      function ocultarBanner() {
+        if (banner) banner.classList.add('oculto');
+      }
+
+      var consentimiento = null;
+      try {
+        consentimiento = localStorage.getItem('cookiesEnglobarte');
+      } catch (e) {
+        consentimiento = null;
+      }
+
+      if (consentimiento === 'aceptado') {
+        cargarGoogleAnalytics();
+      } else if (consentimiento !== 'rechazado') {
+        mostrarBanner();
+      }
+
+      if (btnAceptar) {
+        btnAceptar.addEventListener('click', function () {
+          try { localStorage.setItem('cookiesEnglobarte', 'aceptado'); } catch (e) {}
+          ocultarBanner();
+          cargarGoogleAnalytics();
+        });
+      }
+
+      if (btnRechazar) {
+        btnRechazar.addEventListener('click', function () {
+          try { localStorage.setItem('cookiesEnglobarte', 'rechazado'); } catch (e) {}
+          ocultarBanner();
+        });
+      }
+
+      if (linkConfig) {
+        linkConfig.addEventListener('click', function (e) {
+          e.preventDefault();
+          mostrarBanner();
+        });
+      }
+    })();
+  </script>
 
 </body>
 </html>

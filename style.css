@@ -711,3 +711,101 @@ footer {
 .footer-legal a {
   color: white;
 }
+
+.footer-legal button.link-cookies {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: white;
+  text-decoration: underline;
+  font-family: Georgia, serif;
+  font-size: inherit;
+  cursor: pointer;
+}
+
+/* ===== Aviso de cookies ===== */
+.cookie-banner {
+  position: fixed;
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: white;
+  color: var(--color-texto);
+  border-radius: 14px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+  padding: 20px 24px;
+  z-index: 400;
+}
+
+.cookie-banner.oculto {
+  display: none;
+}
+
+.cookie-banner p {
+  font-size: 0.9rem;
+  margin-bottom: 14px;
+}
+
+.cookie-banner a {
+  color: var(--color-principal);
+  font-weight: bold;
+}
+
+.cookie-botones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.cookie-btn {
+  border: none;
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-family: Georgia, serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.cookie-btn-rechazar {
+  background-color: var(--color-claro-suave);
+  color: var(--color-texto);
+}
+
+.cookie-btn-rechazar:hover {
+  background-color: var(--color-claro);
+}
+
+.cookie-btn-aceptar {
+  background-color: var(--color-principal);
+  color: white;
+}
+
+.cookie-btn-aceptar:hover {
+  background-color: #3d7178;
+}
+
+@media (max-width: 768px) {
+  .cookie-banner {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    padding: 16px 18px;
+  }
+}
+
+.cookie-btn-inline {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: var(--color-principal);
+  font-weight: bold;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+}
