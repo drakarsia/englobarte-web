@@ -52,10 +52,53 @@ Cómo debes comportarte:
 
     const textoRespuesta = datos.content[0].text;
 
+    // Si el cliente ha dejado un email o un teléfono en su último mensaje,
+    // avisamos a Alba por correo con toda la conversación. No bloquea la
+    // respuesta del chat ni la hace fallar si el aviso no se pudiera enviar.
+    avisarSiHayContacto(messages).catch((error) => {
+      console.error('Error al avisar a Alba del contacto:', error);
+    });
+
     return res.status(200).json({ respuesta: textoRespuesta });
 
   } catch (error) {
     console.error('Error:', error);
     return res.status(500).json({ error: 'Algo ha fallado' });
+  }
+}
+
+function contieneContacto(texto) {
+  const tieneEmail = /[^\s@]+@[^\s@]+\.[^\s@]+/.test(texto);
+  const soloDigitos = texto.replace(/[^\d]/g, '');
+  const tieneTelefono = soloDigitos.length >= 9;
+  return tieneEmail || tieneTelefono;
+}
+
+async function avisarSiHayContacto(messages) {
+  const ultimoMensajeUsuario = [...messages].reverse().find((m) => m.role === 'user');
+  if (!ultimoMensajeUsuario || !contieneContacto(ultimoMensajeUsuario.content)) return;
+  if (!process.env.RESEND_API_KEY) return;
+
+  const transcripcion = messages
+    .map((m) => `${m.role === 'user' ? 'Cliente' : 'Asistente'}: ${m.content}`)
+    .join('\n\n');
+
+  const respuestaResend = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.RESEND_API_KEY}`
+    },
+    body: JSON.stringify({
+      from: 'Web Englobarte <notificaciones@englobarte.es>',
+      to: ['englobarte.tgn@gmail.com'],
+      subject: 'Nuevo contacto desde el chat de la web',
+      text: `Alguien ha dejado sus datos de contacto hablando con el chatbot de la web.\n\nConversación completa:\n\n${transcripcion}`
+    })
+  });
+
+  if (!respuestaResend.ok) {
+    const detalle = await respuestaResend.text();
+    console.error('Resend respondió con error:', respuestaResend.status, detalle);
   }
 }
