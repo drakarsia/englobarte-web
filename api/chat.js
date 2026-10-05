@@ -107,4 +107,4 @@ async function avisarSiHayContacto(messages) {
 
   const textoRespuestaResend = await respuestaResend.text();
   console.log('[contacto] respuesta de Resend — status:', respuestaResend.status, '— cuerpo:', textoRespuestaResend);
-}
+} 
