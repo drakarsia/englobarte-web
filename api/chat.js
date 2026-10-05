@@ -52,9 +52,11 @@ Cómo debes comportarte:
 
     const textoRespuesta = datos.content[0].text;
 
-    avisarSiHayContacto(messages).catch((error) => {
+    try {
+      await avisarSiHayContacto(messages);
+    } catch (error) {
       console.error('[contacto] Error al avisar a Alba del contacto:', error);
-    });
+    }
 
     return res.status(200).json({ respuesta: textoRespuesta });
 
@@ -107,4 +109,4 @@ async function avisarSiHayContacto(messages) {
 
   const textoRespuestaResend = await respuestaResend.text();
   console.log('[contacto] respuesta de Resend — status:', respuestaResend.status, '— cuerpo:', textoRespuestaResend);
-} 
+}
