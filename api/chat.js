@@ -52,11 +52,8 @@ Cómo debes comportarte:
 
     const textoRespuesta = datos.content[0].text;
 
-    // Si el cliente ha dejado un email o un teléfono en su último mensaje,
-    // avisamos a Alba por correo con toda la conversación. No bloquea la
-    // respuesta del chat ni la hace fallar si el aviso no se pudiera enviar.
     avisarSiHayContacto(messages).catch((error) => {
-      console.error('Error al avisar a Alba del contacto:', error);
+      console.error('[contacto] Error al avisar a Alba del contacto:', error);
     });
 
     return res.status(200).json({ respuesta: textoRespuesta });
@@ -76,8 +73,19 @@ function contieneContacto(texto) {
 
 async function avisarSiHayContacto(messages) {
   const ultimoMensajeUsuario = [...messages].reverse().find((m) => m.role === 'user');
-  if (!ultimoMensajeUsuario || !contieneContacto(ultimoMensajeUsuario.content)) return;
-  if (!process.env.RESEND_API_KEY) return;
+  console.log('[contacto] último mensaje del usuario:', ultimoMensajeUsuario ? ultimoMensajeUsuario.content : '(ninguno)');
+
+  if (!ultimoMensajeUsuario || !contieneContacto(ultimoMensajeUsuario.content)) {
+    console.log('[contacto] no se detectó email ni teléfono, no se avisa.');
+    return;
+  }
+  console.log('[contacto] contacto detectado, revisando clave de Resend...');
+
+  if (!process.env.RESEND_API_KEY) {
+    console.log('[contacto] RESEND_API_KEY no está definida en este entorno. No se puede avisar.');
+    return;
+  }
+  console.log('[contacto] clave encontrada, enviando correo a Resend...');
 
   const transcripcion = messages
     .map((m) => `${m.role === 'user' ? 'Cliente' : 'Asistente'}: ${m.content}`)
@@ -97,8 +105,6 @@ async function avisarSiHayContacto(messages) {
     })
   });
 
-  if (!respuestaResend.ok) {
-    const detalle = await respuestaResend.text();
-    console.error('Resend respondió con error:', respuestaResend.status, detalle);
-  }
+  const textoRespuestaResend = await respuestaResend.text();
+  console.log('[contacto] respuesta de Resend — status:', respuestaResend.status, '— cuerpo:', textoRespuestaResend);
 }
