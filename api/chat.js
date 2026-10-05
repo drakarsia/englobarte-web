@@ -55,7 +55,7 @@ Cómo debes comportarte:
     try {
       await avisarSiHayContacto(messages);
     } catch (error) {
-      console.error('[contacto] Error al avisar a Alba del contacto:', error);
+      console.error('Error al avisar a Alba del contacto:', error);
     }
 
     return res.status(200).json({ respuesta: textoRespuesta });
@@ -75,19 +75,8 @@ function contieneContacto(texto) {
 
 async function avisarSiHayContacto(messages) {
   const ultimoMensajeUsuario = [...messages].reverse().find((m) => m.role === 'user');
-  console.log('[contacto] último mensaje del usuario:', ultimoMensajeUsuario ? ultimoMensajeUsuario.content : '(ninguno)');
-
-  if (!ultimoMensajeUsuario || !contieneContacto(ultimoMensajeUsuario.content)) {
-    console.log('[contacto] no se detectó email ni teléfono, no se avisa.');
-    return;
-  }
-  console.log('[contacto] contacto detectado, revisando clave de Resend...');
-
-  if (!process.env.RESEND_API_KEY) {
-    console.log('[contacto] RESEND_API_KEY no está definida en este entorno. No se puede avisar.');
-    return;
-  }
-  console.log('[contacto] clave encontrada, enviando correo a Resend...');
+  if (!ultimoMensajeUsuario || !contieneContacto(ultimoMensajeUsuario.content)) return;
+  if (!process.env.RESEND_API_KEY) return;
 
   const transcripcion = messages
     .map((m) => `${m.role === 'user' ? 'Cliente' : 'Asistente'}: ${m.content}`)
@@ -107,6 +96,8 @@ async function avisarSiHayContacto(messages) {
     })
   });
 
-  const textoRespuestaResend = await respuestaResend.text();
-  console.log('[contacto] respuesta de Resend — status:', respuestaResend.status, '— cuerpo:', textoRespuestaResend);
+  if (!respuestaResend.ok) {
+    const detalle = await respuestaResend.text();
+    console.error('Resend respondió con error:', respuestaResend.status, detalle);
+  }
 }
