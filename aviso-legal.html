@@ -198,5 +198,18 @@
     })();
   </script>
 
+  <script>
+    document.querySelectorAll('a[href^="https://wa.me/"]').forEach(function (enlaceWhatsapp) {
+      enlaceWhatsapp.addEventListener('click', function () {
+        if (typeof window.gtag === 'function') {
+          gtag('event', 'click_whatsapp', {
+            event_category: 'contacto',
+            event_label: 'WhatsApp'
+          });
+        }
+      });
+    });
+  </script>
+
 </body>
 </html>
